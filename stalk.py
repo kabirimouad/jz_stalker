@@ -26,20 +26,21 @@ def login(driver, EMAIL, PASSWORD):
     driver.find_element(By.ID, "siteNavBar_btnLogin").click()
 
 def search_for_course(driver, course_code):
+    # 1 | click | linkText=Students | 
     driver.find_element(By.LINK_TEXT, "Students").click()
-    # 12 | click | id=pg1_V_lblAddDrop | 
-    driver.find_element(By.ID, "pg1_V_lblAddDrop").click()
-    # 13 | click | id=pg0_V_ddlTerm | 
+    # 2 | click | id=pg1_V_lblAdvancedSearch | 
+    driver.find_element(By.ID, "pg1_V_lblAdvancedSearch").click()
+    # 3 | click | id=pg0_V_ddlTerm | 
     driver.find_element(By.ID, "pg0_V_ddlTerm").click()
-    # 14 | select | id=pg0_V_ddlTerm | label=2022-2023 Academic Year - Spring Semester
+    # 4 | select | id=pg0_V_ddlTerm | label=2022-2023 Academic Year - Spring Semester
     dropdown = driver.find_element(By.ID, "pg0_V_ddlTerm")
     dropdown.find_element(By.XPATH, "//option[. = '2022-2023 Academic Year - Spring Semester']").click()
-    # 15 | click | id=pg0_V_tabSearch_txtCourseRestrictor | 
-    driver.find_element(By.ID, "pg0_V_tabSearch_txtCourseRestrictor").click()
-    # 16 | type | id=pg0_V_tabSearch_txtCourseRestrictor | csc 3326
-    driver.find_element(By.ID, "pg0_V_tabSearch_txtCourseRestrictor").send_keys(course_code)
-    # 17 | click | id=pg0_V_tabSearch_btnSearch | 
-    driver.find_element(By.ID, "pg0_V_tabSearch_btnSearch").click()
+    # 5 | click | id=pg0_V_txtCourseRestrictor | 
+    driver.find_element(By.ID, "pg0_V_txtCourseRestrictor").click()
+    # 6 | type | id=pg0_V_txtCourseRestrictor | CSC 3351
+    driver.find_element(By.ID, "pg0_V_txtCourseRestrictor").send_keys(course_code)
+    # 7 | click | id=pg0_V_btnSearch | 
+    driver.find_element(By.ID, "pg0_V_btnSearch").click()
 
 def extract_table(driver):
     course_rows = []
@@ -99,12 +100,25 @@ if __name__ == '__main__':
 
     login(driver, AUI_ID, PASSWORD)
     print("Logged in successfully")
+    
+    try:
+        course_code = get_course_code_from_user()
+        print("Searching for course")
+        search_for_course(driver, course_code)
+    except:
+        print("Error searching for course")
+        driver.close()
+        exit()
 
-    print("Searching for course")
-    course_code = get_course_code_from_user();
-    search_for_course(driver, course_code)
+    try:
+        print("Extracting table")
+        course_rows = extract_table(driver)
+    except:
+        print("Error extracting table")
+        driver.close()
+        exit()
 
-    course_rows = extract_table(driver)
+
     # append to the dictionary of courses
     courses[course_code] = course_rows
 
