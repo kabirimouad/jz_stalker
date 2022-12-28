@@ -11,10 +11,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-
-driver_path = r"C:\chromedriver.exe" 
-
-
 load_dotenv()
 AUI_ID = os.getenv('AUI_ID')
 PASSWORD = os.getenv('PASSWORD')
@@ -45,7 +41,6 @@ def search_for_course(driver, course_code):
     driver.find_element(By.ID, "pg0_V_txtCourseRestrictor").send_keys(course_code)
     # 7 | click | id=pg0_V_btnSearch | 
     driver.find_element(By.ID, "pg0_V_btnSearch").click()
-
 
 def extract_table(driver):
     course_rows = []
@@ -83,17 +78,31 @@ def extract_table(driver):
     return course_rows
 
 
+def get_course_code_from_user() -> str: 
+    print("1. Track a course.\n2. Track a section.")
+    choice: int = int(input("Hello Again! can you please specify which type of tracking you would like to perform(Choose a number): "))
+    code: str = str(input("Type the course code: "))
+    if choice == 1:
+        return code
+    elif choice == 2:
+        section: int = int(input("Type the section: "))
+        if int(section / 10) == 0: 
+            return f'{code} 0{section}'
+        else:
+            return f'{code} {section}'
+    else:
+        print("Please, next time select from the choices we offered!")
 
 if __name__ == '__main__':
     courses = {} 
-    course_code = "CSC 3326"
 
     driver = webdriver.Chrome(WEBDRIVER_PATH)
 
     login(driver, AUI_ID, PASSWORD)
     print("Logged in successfully")
-
+    
     try:
+        course_code = get_course_code_from_user()
         print("Searching for course")
         search_for_course(driver, course_code)
     except:
@@ -108,6 +117,7 @@ if __name__ == '__main__':
         print("Error extracting table")
         driver.close()
         exit()
+
 
     # append to the dictionary of courses
     courses[course_code] = course_rows
