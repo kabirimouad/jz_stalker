@@ -47,6 +47,8 @@ def search_for_course(driver, course_code):
 
 
 def extract_table(driver):
+    course_rows = []
+
     # Find the tbody element that contains the rows of the table
     tbody = driver.find_element(By.CSS_SELECTOR, 'tbody.gbody')
 
@@ -66,21 +68,39 @@ def extract_table(driver):
         course_code = cells[2].text
         professor = cells[4].text
         seats_open = cells[5].text
+
+        course_rows.append({
+            'course_code': course_code,
+            'professor': professor,
+            'seats_open': seats_open
+        })
         
         # Print the information
         print(f'Course code: {course_code} | Professor: {professor} | Seats open: {seats_open}')
 
     print("Done Extracting...")
+    return course_rows
 
 
 
 if __name__ == '__main__':
+    courses = {} 
+    course_code = "CSC 3326"
+
     driver = webdriver.Chrome(WEBDRIVER_PATH)
+
     login(driver, AUI_ID, PASSWORD)
     print("Logged in successfully")
-    print("Searching for course")
-    search_for_course(driver, "CSC 3326")
-    extract_table(driver)
 
+    print("Searching for course")
+    search_for_course(driver, course_code)
+
+    course_rows = extract_table(driver)
+    # append to the dictionary of courses
+    courses[course_code] = course_rows
+
+    # write the dictionary to a json file
+    with open('courses.json', 'w') as f:
+        json.dump(courses, f, indent=4)
 
     driver.close()
