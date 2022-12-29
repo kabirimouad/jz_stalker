@@ -37,6 +37,10 @@ def search_for_course(driver, course_code):
     dropdown.find_element(By.XPATH, "//option[. = '2022-2023 Academic Year - Spring Semester']").click()
     # 5 | click | id=pg0_V_txtCourseRestrictor | 
     driver.find_element(By.ID, "pg0_V_txtCourseRestrictor").click()
+
+    # clear the input field (JZC stores the last search and it will cause a problem)
+    driver.find_element(By.ID, "pg0_V_txtCourseRestrictor").clear()
+
     # 6 | type | id=pg0_V_txtCourseRestrictor | CSC 3351
     driver.find_element(By.ID, "pg0_V_txtCourseRestrictor").send_keys(course_code)
     # 7 | click | id=pg0_V_btnSearch | 
@@ -93,8 +97,13 @@ def get_course_code_from_user() -> str:
     else:
         print("Please, next time select from the choices we offered!")
 
+
+
+
+
+
 if __name__ == '__main__':
-    courses = {} 
+    course_codes = {} 
 
     driver = webdriver.Chrome(WEBDRIVER_PATH)
 
@@ -120,10 +129,10 @@ if __name__ == '__main__':
 
 
     # append to the dictionary of courses
-    courses[course_code] = course_rows
+    course_codes[course_code] = course_rows
 
     # write the dictionary to a json file
     with open('courses.json', 'w') as f:
-        json.dump(courses, f, indent=4)
+        json.dump(course_codes, f, indent=4)
 
     driver.close()
