@@ -134,7 +134,7 @@ while True:
     
     # wait an interval between 3 and 5 minutes
     print("Waiting for next check...")
-    time.sleep(random.randint(30, 60))
+    time.sleep(random.randint(180, 300))
 
 
 # driver.close()
