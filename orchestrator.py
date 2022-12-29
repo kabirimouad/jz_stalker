@@ -17,7 +17,6 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 file_handler.setFormatter(formatter)
 # add the file handler to the logger
 logger.addHandler(file_handler)
-
 logger.info('Script started')
 
 
@@ -41,7 +40,11 @@ load_dotenv()
 AUI_ID = os.getenv('AUI_ID')
 PASSWORD = os.getenv('PASSWORD')
 WEBDRIVER_PATH = os.getenv('WEBDRIVER_PATH')
-driver = webdriver.Chrome(executable_path=WEBDRIVER_PATH)
+
+# to remove unnecessary logs from the console
+options = webdriver.ChromeOptions()
+options.add_experimental_option('excludeSwitches', ['enable-logging'])
+driver = webdriver.Chrome(options=options, executable_path=WEBDRIVER_PATH)
 
 login(driver, AUI_ID, PASSWORD)
 print("Logged in successfully")
@@ -62,6 +65,7 @@ while True:
             search_for_course(driver, course_code)
         except:
             print("Error searching for course")
+            logger.alert(f"Error searching for course {course_code}")
             continue
 
         try:
@@ -69,6 +73,7 @@ while True:
             course_rows = extract_table(driver)
         except:
             print("Error extracting table")
+            logger.alert(f"Error extracting table for course {course_code}")
             continue
 
         # append to the dictionary of courses
