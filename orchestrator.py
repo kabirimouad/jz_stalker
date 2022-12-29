@@ -1,6 +1,11 @@
 from stalk import *
+from mailer import *
 import random
 import logging
+
+outlook_email = os.getenv('OUTLOOK_EMAIL')
+outlook_password = os.getenv('OUTLOOK_PASSWORD')
+
 
 course_codes = [] # list of course codes to track
 courses = {} # dictionary of courses, where the key is the course code and the value is a list of dictionaries, each dictionary representing a section
@@ -50,6 +55,7 @@ login(driver, AUI_ID, PASSWORD)
 print("Logged in successfully")
 
 while True:
+    email_message = "" # message to send in the email
 
     # open the file and get the course codes appended to it
     with open('course_codes.txt', 'r') as f:
@@ -65,7 +71,7 @@ while True:
             search_for_course(driver, course_code)
         except:
             print("Error searching for course")
-            logger.alert(f"Error searching for course {course_code}")
+            logger.error(f"Error searching for course {course_code}")
             continue
 
         try:
@@ -73,7 +79,7 @@ while True:
             course_rows = extract_table(driver)
         except:
             print("Error extracting table")
-            logger.alert(f"Error extracting table for course {course_code}")
+            logger.error(f"Error extracting table for course {course_code}")
             continue
 
         # append to the dictionary of courses
@@ -96,7 +102,8 @@ while True:
         for key in courses:
             if key in old_courses:
                 if len(courses[key]) != len(old_courses[key]):
-                    message = f"Number of section for {key} has changed, new number of sections is {len(courses[key])}"
+                    message = f"Number of sections for {key} has changed. Old : {len(old_courses[key])} New : {len(courses[key])}"
+                    email_message += message + "\n"
                     print(message)
                     logger.info(message) 
                     changed = True
@@ -104,11 +111,13 @@ while True:
                     for i in range(min(len(courses[key]), len(old_courses[key]))):
                         if courses[key][i]['professor'] != old_courses[key][i]['professor']:
                             message = f"Field {courses[key][i]['course_code']} has changed: professor. Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}"
+                            email_message += message + "\n"
                             print(message)
                             logger.info(message)
                             changed = True
                         if courses[key][i]['seats_open'] != old_courses[key][i]['seats_open']:
                             message = f"Field {courses[key][i]['course_code']} has changed: seats_open. Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}"
+                            email_message += message + "\n"
                             print(message)
                             logger.info(message)
                             changed = True
@@ -117,11 +126,13 @@ while True:
                     for i in range(len(courses[key])):
                         if courses[key][i]['professor'] != old_courses[key][i]['professor']:
                             message = f"Field {courses[key][i]['course_code']} has changed: professor. Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}"
+                            email_message += message + "\n"
                             print(message)
                             logger.info(message)
                             changed = True
                         if courses[key][i]['seats_open'] != old_courses[key][i]['seats_open']:
                             message = f"Field {courses[key][i]['course_code']} has changed: seats_open. Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}"
+                            email_message += message + "\n"
                             print(message)
                             logger.info(message)
                             changed = True
@@ -136,6 +147,16 @@ while True:
     if changed or not old_courses_exist:
         with open('courses.json', 'w') as f:
             json.dump(courses, f, indent=4)
+        # send an email
+        try :
+            send_email(outlook_email, outlook_password, "Stalker Update!", email_message)
+        except:
+            print("Error sending email")
+            logger.error("Error sending email")
+        email_message = ""
+
+    
+
     
     # wait an interval between 3 and 5 minutes
     print("Waiting for next check...")
