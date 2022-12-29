@@ -43,34 +43,40 @@ driver.close()
 
 # open the old courses file and compare it to the new one
 changed = False # if changed is true, then we need to store the new version
-with open('courses.json', 'r') as f:
-    old_courses = json.load(f)
+old_courses_exist = True
 
-for key in courses:
-    if key in old_courses:
-        if len(courses[key]) != len(old_courses[key]):
-            print(f"Number of section for {key} has changed, new number of sections is {len(courses[key])}")
-            changed = True
-            # Check the common sections
-            for i in range(min(len(courses[key]), len(old_courses[key]))):
-                if courses[key][i]['professor'] != old_courses[key][i]['professor']:
-                    print(f"Field {courses[key][i]['course_code']} has changed: professor. Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}")
-                    changed = True
-                if courses[key][i]['seats_open'] != old_courses[key][i]['seats_open']:
-                    print(f"Field {courses[key][i]['course_code']} has changed: seats_open. Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}")
-                    changed = True
-        else:
-            # The number of sections is the same, so we can just iterate through all of them
-            for i in range(len(courses[key])):
-                if courses[key][i]['professor'] != old_courses[key][i]['professor']:
-                    print(f"Field {courses[key][i]['course_code']} has changed: professor. Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}")
-                    changed = True
-                if courses[key][i]['seats_open'] != old_courses[key][i]['seats_open']:
-                    print(f"Field {courses[key][i]['course_code']} has changed: seats_open. Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}")
-                    changed = True
+try:
+    with open('courses.json', 'r') as f:
+        old_courses = json.load(f)
+except FileNotFoundError:
+    old_courses_exist = False
+
+if old_courses_exist:
+    for key in courses:
+        if key in old_courses:
+            if len(courses[key]) != len(old_courses[key]):
+                print(f"Number of section for {key} has changed, new number of sections is {len(courses[key])}")
+                changed = True
+                # Check the common sections
+                for i in range(min(len(courses[key]), len(old_courses[key]))):
+                    if courses[key][i]['professor'] != old_courses[key][i]['professor']:
+                        print(f"Field {courses[key][i]['course_code']} has changed: professor. Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}")
+                        changed = True
+                    if courses[key][i]['seats_open'] != old_courses[key][i]['seats_open']:
+                        print(f"Field {courses[key][i]['course_code']} has changed: seats_open. Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}")
+                        changed = True
+            else:
+                # The number of sections is the same, so we can just iterate through all of them
+                for i in range(len(courses[key])):
+                    if courses[key][i]['professor'] != old_courses[key][i]['professor']:
+                        print(f"Field {courses[key][i]['course_code']} has changed: professor. Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}")
+                        changed = True
+                    if courses[key][i]['seats_open'] != old_courses[key][i]['seats_open']:
+                        print(f"Field {courses[key][i]['course_code']} has changed: seats_open. Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}")
+                        changed = True
 
 
-if changed:
+if changed or not old_courses_exist:
     with open('courses.json', 'w') as f:
         json.dump(courses, f, indent=4)
 
