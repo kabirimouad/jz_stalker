@@ -12,6 +12,6 @@ OUTLOOK_PASSWORD = ""
 - [X] Track Course.
 - [X] Track Section.
 - [X] Track Professor.
-- [ ] Add Course Name
+- [X] Add Course Name
 - [ ] Discord Bot
  
