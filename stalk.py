@@ -66,17 +66,19 @@ def extract_table(driver):
 
         # Extract the information from the cells
         course_code = cells[2].text
+        course_name = cells[3].text
         professor = cells[4].text
         seats_open = cells[5].text
 
         course_rows.append({
             'course_code': course_code,
+            'course_name': course_name,
             'professor': professor,
             'seats_open': seats_open
         })
         
         # Print the information
-        print(f'Course code: {course_code} | Professor: {professor} | Seats open: {seats_open}')
+        print(f'Course code: {course_code} | Course name: {course_name} | Professor: {professor} | Seats open: {seats_open}')
 
     print("Done Extracting...")
     return course_rows

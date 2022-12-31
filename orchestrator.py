@@ -102,7 +102,7 @@ while True:
         for key in courses:
             if key in old_courses:
                 if len(courses[key]) != len(old_courses[key]):
-                    message = f"Number of sections for {key} has changed. Old : {len(old_courses[key])} New : {len(courses[key])}"
+                    message = f"- Number of sections for {key} ({old_courses[key][0]['course_name']}) has changed. Old : {len(old_courses[key])} New : {len(courses[key])}"
                     email_message += message + "\n"
                     print(message)
                     logger.info(message) 
@@ -110,13 +110,13 @@ while True:
                     # Check the common sections
                     for i in range(min(len(courses[key]), len(old_courses[key]))):
                         if courses[key][i]['professor'] != old_courses[key][i]['professor']:
-                            message = f"Field {courses[key][i]['course_code']} has changed: professor. Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}"
+                            message = f"- Field {courses[key][i]['course_code']} ({courses[key][i]['course_name']}) has changed: \"professor\". Old professor : {old_courses[key][i]['professor']} New professor : {courses[key][i]['professor']}"
                             email_message += message + "\n"
                             print(message)
                             logger.info(message)
                             changed = True
                         if courses[key][i]['seats_open'] != old_courses[key][i]['seats_open']:
-                            message = f"Field {courses[key][i]['course_code']} has changed: seats_open. Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}"
+                            message = f"- Field {courses[key][i]['course_code']} ({courses[key][i]['course_name']}) has changed: \"seats_open\". Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}"
                             email_message += message + "\n"
                             print(message)
                             logger.info(message)
@@ -125,19 +125,19 @@ while True:
                     # The number of sections is the same, so we can just iterate through all of them
                     for i in range(len(courses[key])):
                         if courses[key][i]['professor'] != old_courses[key][i]['professor']:
-                            message = f"Field {courses[key][i]['course_code']} has changed: professor. Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}"
+                            message = f"- Field {courses[key][i]['course_code']} ({courses[key][i]['course_name']}) has changed: \"professor\". Old professor : {old_courses[key][i]['professor']} New professor :{courses[key][i]['professor']}"
                             email_message += message + "\n"
                             print(message)
                             logger.info(message)
                             changed = True
                         if courses[key][i]['seats_open'] != old_courses[key][i]['seats_open']:
-                            message = f"Field {courses[key][i]['course_code']} has changed: seats_open. Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}"
+                            message = f"- Field {courses[key][i]['course_code']} ({courses[key][i]['course_name']}) has changed: \"seats_open\". Previous : {old_courses[key][i]['seats_open']} New : {courses[key][i]['seats_open']}"
                             email_message += message + "\n"
                             print(message)
                             logger.info(message)
                             changed = True
             else:
-                message = f"New course {key} has been added"
+                message = f"- New course {key} has been added"
                 print(message)
                 logger.info(message)
                 changed = True
@@ -148,19 +148,21 @@ while True:
         with open('courses.json', 'w') as f:
             json.dump(courses, f, indent=4)
         # send an email
-        try :
-            send_email(outlook_email, outlook_password, "Stalker Update!", email_message)
-        except:
-            print("Error sending email")
-            logger.error("Error sending email")
-        email_message = ""
+        if email_message != "":
+            try :
+                print("Sending email")
+                send_email(outlook_email, outlook_password, "Jz_Stalker Update!", email_message)
+            except:
+                print("Error sending email")
+                logger.error("Error sending email")
+            email_message = ""
 
     
 
     
     # wait an interval between 3 and 5 minutes
     print("Waiting for next check...")
-    time.sleep(random.randint(180, 300))
+    time.sleep(random.randint(60, 80))
 
 
 # driver.close()
