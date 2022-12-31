@@ -30,7 +30,7 @@ while True:
     if course.lower() == 'done':
         break
     # check if the course code is valid
-    elif len(course) != 8:
+    elif len(course) != 8 and len(course) != 11:
         print("Invalid course code")
     else:
         course_codes.append(course)
@@ -152,6 +152,7 @@ while True:
             try :
                 print("Sending email")
                 send_email(outlook_email, outlook_password, "Jz_Stalker Update!", email_message)
+                logger.info("Email sent")
             except:
                 print("Error sending email")
                 logger.error("Error sending email")
