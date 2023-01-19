@@ -48,6 +48,7 @@ WEBDRIVER_PATH = os.getenv('WEBDRIVER_PATH')
 
 # to remove unnecessary logs from the console
 options = webdriver.ChromeOptions()
+options.add_argument('--headless')
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 driver = webdriver.Chrome(options=options, executable_path=WEBDRIVER_PATH)
 
@@ -163,7 +164,7 @@ while True:
     
     # wait an interval between 3 and 5 minutes
     print("Waiting for next check...")
-    time.sleep(random.randint(60, 80))
+    time.sleep(random.randint(0, 30))
 
 
 # driver.close()
