@@ -27,7 +27,8 @@ def login(driver, EMAIL, PASSWORD):
 
 def search_for_course(driver, course_code):
     # 1 | click | linkText=Students | 
-    driver.find_element(By.LINK_TEXT, "Students").click()
+    # driver.find_element(By.LINK_TEXT, "Students").click()
+    driver.get("https://my.aui.ma/ICS/Students/")
     # 2 | click | id=pg1_V_lblAdvancedSearch | 
     driver.find_element(By.ID, "pg1_V_lblAdvancedSearch").click()
     # 3 | click | id=pg0_V_ddlTerm | 
