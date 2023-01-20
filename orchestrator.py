@@ -72,6 +72,8 @@ while True:
             search_for_course(driver, course_code)
         except:
             print("Error searching for course")
+            message = "Error searching for course " + course_code
+            email_message += message + "\n"
             logger.error(f"Error searching for course {course_code}")
             continue
 
