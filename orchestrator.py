@@ -10,7 +10,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-a', '--add', action= 'store_true', help='Add courses to the cart')
 args = parser.parse_args()
 add_course_flag = args.add
-add_course_flag = True
 
 
 outlook_email = os.getenv('OUTLOOK_EMAIL')
