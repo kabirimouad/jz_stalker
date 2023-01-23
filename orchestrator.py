@@ -71,7 +71,8 @@ while True:
     with open('course_codes.txt', 'r') as f:
         course_codes = []
         for line in f:
-            course_codes.append(line.strip())
+            if not line in course_codes:
+                course_codes.append(line.strip())
 
     
 
@@ -166,16 +167,16 @@ while True:
     if changed or not old_courses_exist:
         with open('courses.json', 'w') as f:
             json.dump(courses, f, indent=4)
-        # send an email
-        if email_message != "":
-            try :
-                print("Sending email")
-                send_email(outlook_email, outlook_password, "Jz_Stalker Update!", email_message)
-                logger.info("Email sent")
-            except:
-                print("Error sending email")
-                logger.error("Error sending email")
-            email_message = ""
+    # send an email
+    if email_message != "":
+        try :
+            print("Sending email")
+            send_email(outlook_email, outlook_password, "Jz_Stalker Update!", email_message)
+            logger.info("Email sent")
+        except:
+            print("Error sending email")
+            logger.error("Error sending email")
+        email_message = ""
 
     
 
