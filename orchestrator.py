@@ -2,6 +2,16 @@ from stalk import *
 from mailer import *
 import random
 import logging
+from course_adder import course_adder as add_course 
+import argparse 
+
+# parse the arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('-a', '--add', action= 'store_true', help='Add courses to the cart')
+args = parser.parse_args()
+add_course_flag = args.add
+add_course_flag = True
+
 
 outlook_email = os.getenv('OUTLOOK_EMAIL')
 outlook_password = os.getenv('OUTLOOK_PASSWORD')
@@ -48,7 +58,7 @@ WEBDRIVER_PATH = os.getenv('WEBDRIVER_PATH')
 
 # to remove unnecessary logs from the console
 options = webdriver.ChromeOptions()
-options.add_argument('--headless')
+# options.add_argument('--headless')
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 driver = webdriver.Chrome(options=options, executable_path=WEBDRIVER_PATH)
 
@@ -139,6 +149,13 @@ while True:
                             print(message)
                             logger.info(message)
                             changed = True
+
+                            # if the number of seats open is greater than 0, then we need to add the course if the flag is set
+                        
+                        seats_open = courses[key][i]['seats_open'].split('/')[0]
+                        if int(seats_open) > 0 and add_course_flag:
+                            logger.info(f"Adding course {courses[key][i]['course_code']}")
+                            add_course(courses[key][i]['course_code'], driver) 
             else:
                 message = f"- New course {key} has been added"
                 print(message)
