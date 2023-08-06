@@ -39,8 +39,6 @@ while True:
     if course.lower() == 'done':
         break
     # check if the course code is valid
-    elif len(course) != 8 and len(course) != 11:
-        print("Invalid course code")
     else:
         course_codes.append(course)
 
@@ -63,9 +61,13 @@ driver = webdriver.Chrome(options=options, executable_path=WEBDRIVER_PATH)
 
 login(driver, AUI_ID, PASSWORD)
 print("Logged in successfully")
+print("Starting to stalk...")
+
 
 while True:
     email_message = "" # message to send in the email
+    email_message = "Hello, \n\nThe following changes have been detected: \n\n"
+    
 
     # open the file and get the course codes appended to it
     with open('course_codes.txt', 'r') as f:

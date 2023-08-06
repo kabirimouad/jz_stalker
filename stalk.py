@@ -35,7 +35,7 @@ def search_for_course(driver, course_code):
     driver.find_element(By.ID, "pg0_V_ddlTerm").click()
     # 4 | select | id=pg0_V_ddlTerm | label=2022-2023 Academic Year - Spring Semester
     dropdown = driver.find_element(By.ID, "pg0_V_ddlTerm")
-    dropdown.find_element(By.XPATH, "//option[. = '2022-2023 Academic Year - Spring Semester']").click()
+    dropdown.find_element(By.XPATH, "//option[. = '2023-2024 Academic Year - Fall Semester']").click()
     # 5 | click | id=pg0_V_txtCourseRestrictor | 
     driver.find_element(By.ID, "pg0_V_txtCourseRestrictor").click()
 
