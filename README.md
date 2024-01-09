@@ -15,3 +15,5 @@ OUTLOOK_PASSWORD = ""
 - [X] Add Course Name
 - [ ] Discord Bot
  
+# Disclaimer
+This tool is for educational purposes and experimentation only.
