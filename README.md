@@ -1,12 +1,5 @@
 # jz_stalker
-JZ Stalker is a monitoring tool that can reduce enormous efforts, and automate boring tasks such as checking for an empty section. 
-
-# .env file format
-AUI_ID = ""\
-PASSWORD = ""\
-WEBDRIVER_PATH = ""\
-OUTLOOK_EMAIL = ""\
-OUTLOOK_PASSWORD = ""
+JZ Stalker is a monitoring tool that can reduce enormous efforts, and automate boring tasks such as checking for an empty seat in a class section. 
 
 # Features:
 - [X] Track Course.
